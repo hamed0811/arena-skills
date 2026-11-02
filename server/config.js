@@ -60,14 +60,39 @@ export const config = {
     ttlMs: intEnv('SESSION_TTL_MINUTES', 8 * 60) * 60_000,
     /** Cookies must be Secure in production (HTTPS only). */
     cookieSecure: boolEnv('SESSION_COOKIE_SECURE', isProduction),
-    sameSite: 'strict',
+    /**
+     * 'strict' is ideal for a standalone deployment. Embedded previews and
+     * cross-site iframes need 'none' + Secure (see HANDOFF.md).
+     */
+    sameSite: process.env.SESSION_COOKIE_SAMESITE ?? (isProduction ? 'strict' : 'lax'),
   },
   security: {
+    /** CSP frame-ancestors. Kept configurable because the Arena preview embeds the app. */
+    frameAncestors: (process.env.FRAME_ANCESTORS
+      ?? (isProduction ? "'none'" : "'self' https://*.e2b.app"))
+      .split(/\s+/)
+      .filter(Boolean),
     bcryptRounds: intEnv('BCRYPT_ROUNDS', 12),
     maxFailedLogins: intEnv('MAX_FAILED_LOGINS', 5),
     lockoutMinutes: intEnv('LOCKOUT_MINUTES', 15),
     /** How long a login may stay alive (absolute lifetime, independent of activity). */
     maxSessionAgeMs: intEnv('MAX_SESSION_HOURS', 12) * 3_600_000,
+  },
+  logging: {
+    requests: boolEnv('LOG_REQUESTS', true),
+  },
+  rateLimit: {
+    api: {
+      windowMs: intEnv('API_RATE_WINDOW_MINUTES', 5) * 60_000,
+      max: intEnv('API_RATE_MAX', 600),
+    },
+    login: {
+      windowMs: intEnv('LOGIN_RATE_WINDOW_MINUTES', 15) * 60_000,
+      max: intEnv('LOGIN_RATE_MAX', 10),
+    },
+  },
+  backups: {
+    dir: process.env.BACKUP_DIR ? path.resolve(process.env.BACKUP_DIR) : path.join(ROOT_DIR, 'database', 'backups'),
   },
   uploads: {
     dir: process.env.UPLOAD_DIR ? path.resolve(process.env.UPLOAD_DIR) : path.join(ROOT_DIR, 'database', 'uploads'),
