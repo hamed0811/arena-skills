@@ -218,3 +218,18 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ---------------------------------------------------------------------------
+# Enterprise Budget System
+# ---------------------------------------------------------------------------
+node_modules/
+.env
+.env.local
+database/*.db
+database/*.db-wal
+database/*.db-shm
+database/uploads/*
+!database/uploads/.gitkeep
+database/backups/
+coverage/
+*.log

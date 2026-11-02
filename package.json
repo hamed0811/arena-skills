@@ -1,3 +1,25 @@
 {
-  "type": "module"
+  "name": "enterprise-budget-system",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Enterprise Financial Budget System - Node.js/Express/SQLite backend with a CSP-hardened vanilla JS frontend.",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning server/index.js",
+    "dev": "node --disable-warning=ExperimentalWarning --watch server/index.js",
+    "db:reset": "node --disable-warning=ExperimentalWarning scripts/reset-db.js",
+    "test": "node --disable-warning=ExperimentalWarning --test tests/*.test.js",
+    "test:smoke": "node --disable-warning=ExperimentalWarning tests/smoke-test.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "exceljs": "^4.4.0",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "helmet": "^7.2.0",
+    "multer": "^2.5.0"
+  }
 }
