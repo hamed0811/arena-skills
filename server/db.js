@@ -35,4 +35,6 @@ export function applySchema(db,schemaPath=config.db.schemaPath){
   db.exec(fs.readFileSync(schemaPath,'utf8'));
   const importSchema=path.join(ROOT_DIR,'database','import-schema.sql');
   if(fs.existsSync(importSchema)) db.exec(fs.readFileSync(importSchema,'utf8'));
+  const importColumns = db.prepare('PRAGMA table_info(imported_records)').all().map(row => row.name);
+  if (importColumns.length && !importColumns.includes('foreign_currency')) db.exec('ALTER TABLE imported_records ADD COLUMN foreign_currency TEXT');
 }
