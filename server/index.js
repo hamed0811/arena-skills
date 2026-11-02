@@ -29,6 +29,9 @@ function assertSchemaReady(db) {
     return;
   }
 
+  // Apply additive, idempotent migrations on every startup.
+  applySchema(db);
+
   const admin = db.prepare("SELECT COUNT(*) AS n FROM users WHERE role = 'admin' AND is_active = 1").get();
   if (Number(admin.n) === 0) {
     console.warn('⚠  No active administrator exists. Run: npm run db:reset');
