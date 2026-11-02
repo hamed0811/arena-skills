@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Enterprise Financial Budget System - Node.js/Express/SQLite backend with a CSP-hardened vanilla JS frontend.",
   "engines": {
-    "node": ">=22.5.0"
+    "node": ">=24.0.0"
   },
   "scripts": {
     "start": "node --disable-warning=ExperimentalWarning server/index.js",
