@@ -1,40 +1,89 @@
-# Angular
+# سامانه مدیریت بودجه و عملکرد
 
-A comprehensive guide to modern Angular development (v20+) optimized for AI agents and LLMs.
+سامانه فارسی و راست‌چین برای مدیریت درخواست‌ها، تخصیص‌ها، عملکرد مراکز و گزارش‌های مالی.
 
-## Overview
+## نیازمندی‌ها
 
-This skill covers modern Angular patterns including:
+- Node.js 24 یا بالاتر
+- npm
+- SQLite از طریق ماژول داخلی `node:sqlite`
 
-- **Signals** - Angular's reactive primitive for state management
-- **Standalone Components** - Modern component architecture without NgModules
-- **Zoneless Applications** - High-performance apps without Zone.js
-- **SSR & Hydration** - Server-side rendering and client hydration patterns
-- **Modern Routing** - Functional guards, resolvers, and lazy loading
-- **Dependency Injection** - Modern DI with `inject()` function
-- **Reactive Forms** - Type-safe form handling
+## نصب
 
-## Structure
+```powershell
+npm install
+```
 
-This skill is a single, comprehensive `SKILL.md` file containing:
+## راه‌اندازی پایگاه داده
 
-1. Modern component patterns with Signal inputs/outputs
-2. State management with Signals and computed values
-3. Performance optimization techniques
-4. SSR and hydration best practices
-5. Migration strategies from legacy Angular patterns
+فقط برای پایگاه داده تازه و خالی:
 
-## Usage
+```powershell
+npm run db:reset
+```
 
-This skill is designed to be read in full to understand the complete modern Angular development approach, or referenced for specific patterns when needed.
+**هشدار:** دستور بالا پایگاه داده انتخاب‌شده را حذف و دوباره ایجاد می‌کند. آن را روی پایگاه داده واقعی اجرا نکنید.
 
-## Version
+برای محیط عملیاتی، مقدارهای امن زیر را در متغیرهای محیطی تنظیم کنید:
 
-Current version: 1.0.0 (February 2026)
+- `NODE_ENV=production`
+- `SESSION_SECRET` با حداقل ۳۲ نویسه تصادفی
+- `ADMIN_PASSWORD` با گذرواژه قوی
+- `DB_PATH` برای مسیر پایگاه داده
 
-## References
+## اجرا
 
-- [Angular Documentation](https://angular.dev)
-- [Angular Signals](https://angular.dev/guide/signals)
-- [Zoneless Angular](https://angular.dev/guide/zoneless)
-- [Angular SSR](https://angular.dev/guide/ssr)
+```powershell
+npm start
+```
+
+نشانی پیش‌فرض: `http://localhost:3000`
+
+سلامت API: `/api/health`
+
+## ورود Excel
+
+مسیر رابط کاربری: «ورود اطلاعات اکسل».
+
+سامانه از فایل‌های XLSX و XLSM پشتیبانی می‌کند. فایل می‌تواند چند شیت داشته باشد.
+
+### ساختارهای شناسایی‌شده
+
+1. تخصیص دلار و یورو (نوع ۱ و ۳)
+2. تخصیص ریالی با واحد هزار ریال (نوع ۲)
+3. درخواست‌ها و بودجه‌ها (نوع ۴)
+4. عملکرد مراکز (نوع ۵)
+
+سامانه نام ستون‌ها را نرمال می‌کند. حروف عربی و فارسی، فاصله‌ها و ارقام فارسی را در نظر می‌گیرد. ستون‌های ناشناخته را نیز حفظ می‌کند.
+
+### کنترل مالی
+
+- مبالغ ریالی، دلاری و یورویی جدا ذخیره می‌شوند.
+- هزار ریال با ضریب دقیق ۱۰۰۰ به ریال تبدیل می‌شود.
+- ارز نامشخص حدس زده نمی‌شود.
+- ارز پیش‌فرض فقط با انتخاب کاربر اعمال می‌شود.
+- نرخ تبدیل ارز اعمال نمی‌شود.
+- مقادیر منبع و نام شیت و شماره ردیف نگهداری می‌شوند.
+- ورود اطلاعات در یک تراکنش انجام می‌شود.
+- ردیف تکراری با اثرانگشت محتوایی شناسایی می‌شود.
+
+### گزارش‌ها
+
+گزارش‌ها به تفکیک سال و ارز محاسبه می‌شوند. جمع ارزهای مختلف با هم ادغام نمی‌شود. خروجی CSV و Excel در دسترس است.
+
+## آزمون‌ها
+
+```powershell
+npm test
+npm run test:smoke
+```
+
+GitHub Actions با Node.js 24 آزمون‌ها را اجرا می‌کند.
+
+## نکات ایمنی
+
+- نسخه اصلی فایل Excel تغییر نمی‌کند.
+- ورود اطلاعات فقط برای مدیر سامانه مجاز است.
+- ثبت اطلاعات پس از پیش‌نمایش انجام می‌شود.
+- نسخه پشتیبان را قبل از هر تغییر مهم تهیه کنید.
+- قبل از استفاده عملیاتی، آزمون‌ها و تنظیمات امنیتی را بررسی کنید.
