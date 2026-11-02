@@ -3,14 +3,80 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>سامانه مدیریت بودجه</title>
+  <meta name="theme-color" content="#f5f7fb">
+  <title>سامانه مدیریت بودجه و عملکرد</title>
   <link rel="stylesheet" href="/css/app.css">
+  <script src="/js/app.js" defer></script>
 </head>
 <body>
-  <main class="placeholder">
-    <h1>سامانه مدیریت بودجه</h1>
-    <p>واسط کاربری در فاز بعدی تکمیل می‌شود. API آماده است.</p>
-  </main>
-  <script src="/js/app.js" defer></script>
+  <div id="login-view" class="login-shell" hidden>
+    <section class="login-card">
+      <div class="brand-mark">ب</div>
+      <p class="eyebrow">سامانه مالی سازمان</p>
+      <h1>مدیریت بودجه و عملکرد</h1>
+      <p class="muted">برای ورود، اطلاعات حساب خود را وارد کنید.</p>
+      <form id="login-form">
+        <label for="username">نام کاربری</label>
+        <input id="username" name="username" autocomplete="username" required>
+        <label for="password">گذرواژه</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+        <button class="primary full" type="submit">ورود به سامانه</button>
+        <p id="login-error" class="message error" role="alert"></p>
+      </form>
+    </section>
+  </div>
+  <div id="app-view" class="app-shell" hidden>
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark small">ب</div>
+        <div><strong>مدیریت بودجه</strong><span>سامانه مالی سازمان</span></div>
+      </div>
+      <nav aria-label="ناوبری اصلی">
+        <button class="nav-link active" data-page="dashboard"><span>▦</span> نمای کلی</button>
+        <button class="nav-link" data-page="import"><span>⇧</span> ورود اطلاعات اکسل</button>
+        <button class="nav-link" data-page="reports"><span>▤</span> گزارش‌ها</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="user-chip"><span class="avatar">م</span><span id="user-name">کاربر سامانه</span></div>
+        <button id="logout-button" class="logout">خروج از حساب</button>
+      </div>
+    </aside>
+    <main class="main-content">
+      <header class="topbar"><div><p class="eyebrow">مدیریت مالی و اعتبارات</p><h1 id="page-title">نمای کلی</h1></div><span class="status-pill"><i></i> سامانه فعال</span></header>
+      <section id="dashboard-page" class="page">
+        <div class="welcome-panel"><div><p class="eyebrow">داشبورد مدیریتی</p><h2>تصویر یکپارچه بودجه و عملکرد</h2><p>اطلاعات ثبت‌شده را به تفکیک سال و ارز مشاهده کنید.</p></div><button class="primary" data-go="import">بارگذاری فایل اکسل</button></div>
+        <div id="summary-cards" class="summary-grid"><article class="metric"><span>در حال دریافت اطلاعات</span><strong>—</strong></article></div>
+        <section class="panel"><div class="panel-heading"><div><h2>خلاصه اعتبارات</h2><p>جمع مبالغ به تفکیک ارز؛ بدون تبدیل یا ادغام ارزها</p></div><button class="text-button" data-go="reports">مشاهده گزارش‌ها ←</button></div><div id="dashboard-table" class="table-wrap"><p class="muted">در حال بارگذاری...</p></div></section>
+      </section>
+      <section id="import-page" class="page" hidden>
+        <div class="intro"><h2>بارگذاری هوشمند فایل اکسل</h2><p>سامانه ساختار شیت‌ها را تشخیص می‌دهد و ستون‌ها را به فیلدهای استاندارد متصل می‌کند.</p></div>
+        <section class="panel upload-panel">
+          <form id="import-form">
+            <label class="drop-zone" for="excel-file"><span class="upload-icon">⇧</span><strong>فایل اکسل را انتخاب کنید</strong><span>فرمت‌های XLSX و XLSM · حداکثر ۱۵ مگابایت</span><input id="excel-file" type="file" accept=".xlsx,.xlsm" required></label>
+            <div class="form-row"><div><label for="default-currency">ارز پیش‌فرض برای شیت‌های بدون واحد ارز</label><select id="default-currency"><option value="">بدون انتخاب</option><option value="IRR">ریال</option><option value="USD">دلار</option><option value="EUR">یورو</option></select></div><button class="primary" type="submit">بررسی و پیش‌نمایش</button></div>
+            <p class="muted small">ارز پیش‌فرض فقط برای ردیف‌هایی استفاده می‌شود که ارز آن‌ها در فایل مشخص نیست.</p>
+          </form>
+        </section>
+        <div id="import-message" class="message" role="status"></div>
+        <section id="preview-panel" class="panel" hidden>
+          <div class="panel-heading"><div><h2>پیش‌نمایش اطلاعات</h2><p id="preview-meta"></p></div><button id="confirm-import" class="primary">تأیید و ثبت اطلاعات</button></div>
+          <div id="preview-content"></div>
+        </section>
+      </section>
+      <section id="reports-page" class="page" hidden>
+        <div class="intro"><h2>گزارش‌های بودجه</h2><p>فیلترها را انتخاب کنید. مبالغ هر ارز جداگانه محاسبه می‌شوند.</p></div>
+        <section class="panel">
+          <form id="report-form" class="filters">
+            <div><label for="filter-year">سال</label><input id="filter-year" inputmode="numeric" placeholder="مثلاً ۱۴۰۵"></div>
+            <div><label for="filter-currency">واحد ارز</label><select id="filter-currency"><option value="">همه ارزها</option><option value="IRR">ریال</option><option value="USD">دلار</option><option value="EUR">یورو</option></select></div>
+            <button class="primary" type="submit">اعمال فیلتر</button>
+          </form>
+          <div id="report-results" class="table-wrap"><p class="muted">برای نمایش گزارش، فیلترها را اعمال کنید.</p></div>
+        </section>
+      </section>
+      <footer>سامانه مدیریت بودجه و عملکرد <span>·</span> نسخه ۲.۱</footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
